@@ -5,19 +5,19 @@ import (
 	"time"
 )
 
-type Lesson struct {
+type Lesson struct { // dto
 	ID          int64     `json:"id"`
 	Subject     string    `json:"subject"`
 	Classroom   string    `json:"classroom"`
 	Teacher     string    `json:"teacher"`
-	LessonStart time.Time `json:"start_time"`
+	Starttime   time.Time `json:"start_time"`
 	Grade 		string 	  `json:"grade"`
 }
-type UpdateLesson struct {
+type UpdateLesson struct { // dto
 	Subject     string    `json:"subject"`
 	Classroom   string    `json:"classroom"`
 	Teacher     string    `json:"teacher"`
-	LessonStart time.Time `json:"start_time"`
+	Starttime   time.Time `json:"start_time"`
 	Grade 		string 	  `json:"grade"`
 }
 
