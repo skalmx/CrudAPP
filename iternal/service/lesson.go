@@ -48,6 +48,5 @@ func (l *Lessons) GetAll(ctx context.Context) ([]domain.Lesson, error) {
 }
 
 func (l *Lessons) Update(ctx context.Context, id int64, input domain.UpdateLesson) error {
-	// todo: realization for update
-	return nil
+	return l.repository.Update(ctx, id, input )
 }

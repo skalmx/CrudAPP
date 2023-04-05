@@ -4,9 +4,12 @@ import (
 	"CrudApp/iternal/domain"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"net/http"
+	"strconv"
+
 	"github.com/go-chi/chi/v5"
 )
 
@@ -33,9 +36,11 @@ func (h *Handler) Init() *chi.Mux {
 	r.Route("/lessons", func(r chi.Router){
 		r.Post("/", h.createLesson)
 		r.Get("/", h.getAllLessons)
-		// r.Delete("/{id}",)
-		// r.Put("/{id}",)
-		// r.Get("/{id}",)
+		r.Route("/{lessonsId}", func(r chi.Router) {
+			// r.Delete("/{id}",)
+			r.Put("/", h.updateLesson)
+			// r.Get("/{id}",)
+		})	
 	})
 
 	return r
@@ -79,8 +84,47 @@ func (h *Handler) createLesson(w http.ResponseWriter, r *http.Request) {
 		log.Println("error in service or repo method in createLesson()", err)
 		return
 	}
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (h *Handler) updateLesson(w http.ResponseWriter, r *http.Request) {
-	
+	id, err := getIdFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("cant get id in updateLesson()", err)
+		return
+	}
+
+	req, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Cant read request body in updateLesson()", err)
+		return
+	}
+
+	var lessonInp *domain.UpdateLesson
+	if err = json.Unmarshal(req, &lessonInp); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Cant unmarshal in updateLesson()", err)
+		return
+	}
+
+	err = h.lessonsService.Update(context.TODO(), id, *lessonInp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("error in a service update method", err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+func getIdFromRequest (r *http.Request) (int64, error) {
+	vars := chi.URLParam(r, "lessonsId")
+	id, err := strconv.ParseInt(vars, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	if id <= 0 {
+		return 0, errors.New("id can be only > 0")
+	}
+	return id, nil
 }
