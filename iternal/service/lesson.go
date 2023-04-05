@@ -3,6 +3,7 @@ package service
 import (
 	"CrudApp/iternal/domain"
 	"context"
+	"time"
 )
 
 type LessonsRepository interface {
@@ -24,8 +25,11 @@ func NewLessons(repository LessonsRepository) * Lessons { //ctor
 }
 
 func (l *Lessons) Create(ctx context.Context, lesson domain.Lesson) error {
-	// todo: realization for create
-	return nil
+	if lesson.Starttime.IsZero() {
+		lesson.Starttime = time.Now()
+	} 
+
+	return l.repository.Create(ctx, lesson)
 }
 
 func (l *Lessons) Delete(ctx context.Context, id int64) error {

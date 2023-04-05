@@ -14,11 +14,11 @@ type Lesson struct { // dto
 	Grade 		string 	  `json:"grade"`
 }
 type UpdateLesson struct { // dto
-	Subject     string    `json:"subject"`
-	Classroom   string    `json:"classroom"`
-	Teacher     string    `json:"teacher"`
-	Starttime   time.Time `json:"start_time"`
-	Grade 		string 	  `json:"grade"`
+	Subject     *string    `json:"subject"`
+	Classroom   *string    `json:"classroom"`
+	Teacher     *string    `json:"teacher"`
+	Starttime   *time.Time `json:"start_time"`
+	Grade 		*string 	`json:"grade"`
 }
 
 var (

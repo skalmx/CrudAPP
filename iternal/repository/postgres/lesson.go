@@ -15,8 +15,10 @@ func NewLessonsRepo(db *sql.DB) *Lessons { //ctor
 }
 
 func (l *Lessons) Create(ctx context.Context, lesson domain.Lesson) error {
-	// todo: realization for create
-	return nil
+	_, err := l.db.Exec("INSERT INTO lessons (id, subject, classroom, teacher, starttime, grade) values ($1, $2, $3, $4, $5, $6)",
+			lesson.ID, lesson.Subject, lesson.Classroom, lesson.Teacher, lesson.Starttime, lesson.Grade)
+
+	return err
 }
 
 func (l *Lessons) Delete(ctx context.Context, id int64) error {
@@ -48,6 +50,7 @@ func (l *Lessons) GetAll(ctx context.Context) ([]domain.Lesson, error) {
 }
 
 func (l *Lessons) Update(ctx context.Context, id int64, input domain.UpdateLesson) error {
-	// todo: realization for update
+	
+	
 	return nil
 }
