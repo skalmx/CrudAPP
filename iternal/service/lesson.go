@@ -33,8 +33,7 @@ func (l *Lessons) Create(ctx context.Context, lesson domain.Lesson) error {
 }
 
 func (l *Lessons) Delete(ctx context.Context, id int64) error {
-	// todo: realization for delete
-	return nil
+	return l.repository.Delete(ctx, id)
 }
 
 func (l *Lessons) GetById(ctx context.Context, id int64) (domain.Lesson, error) {

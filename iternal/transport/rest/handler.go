@@ -37,7 +37,7 @@ func (h *Handler) Init() *chi.Mux {
 		r.Post("/", h.createLesson)
 		r.Get("/", h.getAllLessons)
 		r.Route("/{lessonsId}", func(r chi.Router) {
-			// r.Delete("/{id}",)
+			r.Delete("/", h.deleteLesson)
 			r.Put("/", h.updateLesson)
 			// r.Get("/{id}",)
 		})	
@@ -127,4 +127,21 @@ func getIdFromRequest (r *http.Request) (int64, error) {
 		return 0, errors.New("id can be only > 0")
 	}
 	return id, nil
+}
+
+func (h *Handler) deleteLesson(w http.ResponseWriter, r *http.Request) {
+	id, err := getIdFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("cant get id in deleteLesson()",err)
+		return
+	}
+	err = h.lessonsService.Delete(context.TODO(), id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("error in deleteLesson()")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

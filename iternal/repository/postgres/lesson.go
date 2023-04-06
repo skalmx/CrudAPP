@@ -24,8 +24,9 @@ func (l *Lessons) Create(ctx context.Context, lesson domain.Lesson) error {
 }
 
 func (l *Lessons) Delete(ctx context.Context, id int64) error {
-	// todo: realization for delete
-	return nil
+	_, err := l.db.Exec("DELETE FROM lessons where id = $1", id)
+
+	return err
 }
 
 func (l *Lessons) GetById(ctx context.Context, id int64) (domain.Lesson, error) {
@@ -52,9 +53,9 @@ func (l *Lessons) GetAll(ctx context.Context) ([]domain.Lesson, error) {
 }
 
 func (l *Lessons) Update(ctx context.Context, id int64, input domain.UpdateLesson) error {
-	values := make([]string, 0)
-	arguments := make([]interface{}, 0)
-	argNumber := 1
+	values := make([]string, 0) // its slice for get all parameters user want to change
+	arguments := make([]interface{}, 0) // its slice  with all arguments we need to change
+	argNumber := 1 // counter of arguments 
 
 	if input.Subject != nil {
 		arguments = append(arguments, *input.Subject)
@@ -84,7 +85,7 @@ func (l *Lessons) Update(ctx context.Context, id int64, input domain.UpdateLesso
 	arguments = append(arguments, id)
 
 	queryValues := strings.Join(values, ", ")
-	query := fmt.Sprintf("UPDATE lessons SET %s WHERE id=$%d", queryValues, argNumber)
+	query := fmt.Sprintf("UPDATE lessons SET %s WHERE id=$%d", queryValues, argNumber) // get a query like UPDATE {} SET {smth}="123" .... WHERE ID = id
 
 	_, err := l.db.Exec(query, arguments...)
 	return err
