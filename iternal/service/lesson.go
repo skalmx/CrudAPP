@@ -37,12 +37,10 @@ func (l *Lessons) Delete(ctx context.Context, id int64) error {
 }
 
 func (l *Lessons) GetById(ctx context.Context, id int64) (domain.Lesson, error) {
-	// todo: realization for getByID
-	return domain.Lesson{}, nil
+	return l.repository.GetById(ctx, id)
 }
 
-func (l *Lessons) GetAll(ctx context.Context) ([]domain.Lesson, error) {
-	// todo: realization for getAll 
+func (l *Lessons) GetAll(ctx context.Context) ([]domain.Lesson, error) { 
 	return l.repository.GetAll(ctx)
 }
 

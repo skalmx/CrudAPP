@@ -39,7 +39,7 @@ func (h *Handler) Init() *chi.Mux {
 		r.Route("/{lessonsId}", func(r chi.Router) {
 			r.Delete("/", h.deleteLesson)
 			r.Put("/", h.updateLesson)
-			// r.Get("/{id}",)
+			r.Get("/", h.getLessonByID)
 		})	
 	})
 
@@ -60,7 +60,8 @@ func (h *Handler) getAllLessons(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 }
 
@@ -144,4 +145,29 @@ func (h *Handler) deleteLesson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) getLessonByID(w http.ResponseWriter, r *http.Request) {
+	id, err := getIdFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("cant get id in getLessonByID()",err)
+		return
+	}
+	lesson, err := h.lessonsService.GetById(context.TODO(), id)
+	if err != nil {
+		log.Println("getLessonByID(): error in services", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response, err := json.Marshal(lesson)
+	if err != nil {
+		log.Println("getLessonByID():marshaling", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
