@@ -103,14 +103,14 @@ func (h *Handler) updateLesson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var lessonInp *domain.UpdateLesson
+	var lessonInp domain.UpdateLesson
 	if err = json.Unmarshal(req, &lessonInp); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Cant unmarshal in updateLesson()", err)
 		return
 	}
 
-	err = h.lessonsService.Update(context.TODO(), id, *lessonInp)
+	err = h.lessonsService.Update(context.TODO(), id, lessonInp)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("error in a service update method", err)

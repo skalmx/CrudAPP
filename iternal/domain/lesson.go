@@ -5,15 +5,15 @@ import (
 	"time"
 )
 
-type Lesson struct { // dto
+type Lesson struct { 
 	ID          int64     `json:"id"`
 	Subject     string    `json:"subject"`
 	Classroom   string    `json:"classroom"`
 	Teacher     string    `json:"teacher"`
 	Starttime   time.Time `json:"start_time"`
 	Grade 		string 	  `json:"grade"`
-}
-type UpdateLesson struct { // dto
+}	
+type UpdateLesson struct { 
 	Subject     *string    `json:"subject"`
 	Classroom   *string    `json:"classroom"`
 	Teacher     *string    `json:"teacher"`
